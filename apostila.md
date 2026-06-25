@@ -168,11 +168,17 @@ Salve o módulo auditado e enriquecido em:
 
 Crie a pasta `revisao/` se não existir.
 
-Ao terminar, retorne um resumo com:
-- Quantas redundâncias/imprecisões foram corrigidas
-- Quantos exemplos práticos foram adicionados
-- Quantos exercícios foram adicionados
-- Quantos marcadores de imagem foram inseridos
+Ao terminar, retorne obrigatoriamente os dados no formato abaixo (o orquestrador usa esses valores para montar a tabela final):
+
+MÓDULO: [N]
+TÍTULO: [Título do módulo]
+CORREÇÕES: [número de redundâncias/imprecisões corrigidas]
+EXEMPLOS: [número de exemplos práticos adicionados]
+EXERCÍCIOS: [número de exercícios adicionados]
+ATIVIDADES: [número de atividades para próxima aula adicionadas]
+IMAGENS_FOTO: [número de marcadores FOTO inseridos]
+IMAGENS_INFO: [número de marcadores INFO inseridos]
+DESTAQUES: [até 2 frases sobre as mudanças mais relevantes feitas neste módulo]
 ```
 
 ### Passo 5: Aguardar e consolidar
@@ -180,13 +186,23 @@ Ao terminar, retorne um resumo com:
 Após todos os agentes concluírem:
 1. Leia cada `revisao/modulo_0N.md` gerado e confirme que existe
 2. Atualize PROGRESS.md marcando todos os módulos como `[x]` auditados e enriquecidos
-3. Exiba um resumo consolidado:
+3. Colete os dados retornados por cada agente e exiba a tabela consolidada:
+
 ```
 Fase 1 concluída — [N] módulos processados em paralelo.
 
-Resumo por módulo:
-  Módulo 1 — [Título]: X exemplos, Y exercícios, Z imagens
-  Módulo 2 — [Título]: X exemplos, Y exercícios, Z imagens
+| Módulo | Título | Correções | Exemplos | Exercícios | Atividades | Imagens |
+|--------|--------|-----------|----------|------------|------------|---------|
+| 1 | [Título] | X | X | X | X | Xf Xi |
+| 2 | [Título] | X | X | X | X | Xf Xi |
+...
+| Total | | XX | XX | XX | XX | XXf XXi |
+
+(f = FOTO, i = INFO)
+
+Destaques por módulo:
+  Módulo 1: [DESTAQUES]
+  Módulo 2: [DESTAQUES]
   ...
 
 Próximo passo: Fase 2 — Catálogo de Imagens. Deseja continuar?
