@@ -168,17 +168,23 @@ Salve o módulo auditado e enriquecido em:
 
 Crie a pasta `revisao/` se não existir.
 
-Ao terminar, retorne obrigatoriamente os dados no formato abaixo (o orquestrador usa esses valores para montar a tabela final):
+Ao terminar, apresente obrigatoriamente a tabela abaixo para este módulo e, logo após, os dados estruturados que o orquestrador usará para montar o resumo final:
 
-MÓDULO: [N]
-TÍTULO: [Título do módulo]
-CORREÇÕES: [número de redundâncias/imprecisões corrigidas]
-EXEMPLOS: [número de exemplos práticos adicionados]
-EXERCÍCIOS: [número de exercícios adicionados]
-ATIVIDADES: [número de atividades para próxima aula adicionadas]
-IMAGENS_FOTO: [número de marcadores FOTO inseridos]
-IMAGENS_INFO: [número de marcadores INFO inseridos]
-DESTAQUES: [até 2 frases sobre as mudanças mais relevantes feitas neste módulo]
+### Módulo [N] — [Título]
+
+| Alteração | Quantidade |
+|-----------|------------|
+| Redundâncias/imprecisões corrigidas | X |
+| Exemplos práticos adicionados | X |
+| Exercícios adicionados | X |
+| Atividades para próxima aula | X |
+| Marcadores de imagem FOTO | X |
+| Marcadores de imagem INFO | X |
+
+**Destaques:** [até 2 frases sobre as mudanças mais relevantes feitas neste módulo]
+
+---
+DADOS_MÓDULO: [N] | [Título] | correções:[X] | exemplos:[X] | exercícios:[X] | atividades:[X] | foto:[X] | info:[X]
 ```
 
 ### Passo 5: Aguardar e consolidar
@@ -186,24 +192,17 @@ DESTAQUES: [até 2 frases sobre as mudanças mais relevantes feitas neste módul
 Após todos os agentes concluírem:
 1. Leia cada `revisao/modulo_0N.md` gerado e confirme que existe
 2. Atualize PROGRESS.md marcando todos os módulos como `[x]` auditados e enriquecidos
-3. Colete os dados retornados por cada agente e exiba a tabela consolidada:
+3. Extraia as linhas `DADOS_MÓDULO` retornadas por cada agente e exiba a tabela consolidada de totais:
 
 ```
 Fase 1 concluída — [N] módulos processados em paralelo.
 
-| Módulo | Título | Correções | Exemplos | Exercícios | Atividades | Imagens |
-|--------|--------|-----------|----------|------------|------------|---------|
-| 1 | [Título] | X | X | X | X | Xf Xi |
-| 2 | [Título] | X | X | X | X | Xf Xi |
+| Módulo | Título | Correções | Exemplos | Exercícios | Atividades | FOTO | INFO |
+|--------|--------|-----------|----------|------------|------------|------|------|
+| 1 | [Título] | X | X | X | X | X | X |
+| 2 | [Título] | X | X | X | X | X | X |
 ...
-| Total | | XX | XX | XX | XX | XXf XXi |
-
-(f = FOTO, i = INFO)
-
-Destaques por módulo:
-  Módulo 1: [DESTAQUES]
-  Módulo 2: [DESTAQUES]
-  ...
+| **Total** | | **XX** | **XX** | **XX** | **XX** | **XX** | **XX** |
 
 Próximo passo: Fase 2 — Catálogo de Imagens. Deseja continuar?
 ```
