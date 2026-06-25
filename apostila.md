@@ -26,7 +26,7 @@ Quando um caminho de arquivo é passado:
 ## 2. VERIFICAÇÃO DE ESTADO (toda invocação com caminho)
 
 1. Leia `PROGRESS.md` no diretório da apostila (se existir)
-2. Se não existir: inicie Fase 1a para o arquivo indicado, crie `PROGRESS.md` novo
+2. Se não existir: inicie Fase 1 — Mapeamento para o arquivo indicado
 3. Se existir: leia o estado atual, identifique a próxima ação pendente, informe o usuário e pergunte se deseja continuar de onde parou ou reiniciar uma fase específica
 4. Mostre um resumo amigável: "Apostila: [nome] | Fase atual: [X] | Próxima ação: [Y]"
 
@@ -42,109 +42,159 @@ Extraia do nome do arquivo ou caminho:
 
 ---
 
-## 4. FASE 1a — AUDITORIA DE QUALIDADE
+## 4. FASE 1 — MAPEAMENTO E ORQUESTRAÇÃO PARALELA
 
-**Propósito:** Avaliar e limpar o conteúdo antes de adicionar qualquer coisa.
+**Propósito:** Mapear todos os módulos e processar todos em paralelo via agentes independentes.
 
 ### Passo 1: Mapeamento de módulos
-- Para **PDF**: use a ferramenta Read com `pages: "1-10"` para encontrar o índice/sumário
+
+- Para **PDF**: use Read com `pages: "1-10"` para encontrar o índice/sumário
   - Identifique cada módulo: título e intervalo de páginas aproximado
   - Se o índice não estiver nas primeiras 10 páginas, tente `pages: "2-5"` primeiro
 - Para **DOCX**: extraia o XML e leia os títulos com estilo Título1/Heading1
-- Registre no PROGRESS.md: lista de módulos com títulos e páginas (para PDF)
+- Monte a lista completa de módulos com: número, título e páginas (para PDF)
 
-### Passo 2: Processamento módulo a módulo
-Para **cada módulo** (processar um por vez, não todos de uma vez):
+### Passo 2: Confirmar com usuário
 
-**Para PDF**: leia o módulo com `pages: "X-Y"` (use o intervalo do módulo)
-**Para DOCX**: extraia a seção correspondente do XML
+Exiba a lista de módulos identificados no formato:
+```
+Módulos identificados em "[Nome da Apostila]":
+  1. [Título] (p. X–Y)
+  2. [Título] (p. X–Y)
+  ...
+  Total: N módulos
+
+Vou spawnar N agentes em paralelo — um por módulo — para executar auditoria e enriquecimento simultaneamente.
+Confirma?
+```
+
+Aguarde confirmação antes de continuar.
+
+### Passo 3: Criar PROGRESS.md inicial
+
+Crie `PROGRESS.md` no diretório da apostila com todos os módulos marcados como pendentes (ver Seção 9).
+
+### Passo 4: Spawnar agentes em paralelo
+
+Spawne **todos os agentes de uma vez** usando o Agent tool em uma única chamada com múltiplos blocos.
+
+Para cada módulo, use o seguinte prompt (substitua os campos entre colchetes):
+
+```
+Você é um agente especializado em revisão pedagógica de apostilas profissionalizantes.
+
+## SUA TAREFA
+Processar o Módulo [N] — "[Título]" da apostila "[Nome do Curso]".
+Execute FASE 1a (auditoria) seguida de FASE 1b (enriquecimento) e salve o resultado.
+
+## CONTEXTO
+- Arquivo original: [caminho_completo_do_arquivo]
+- Diretório da apostila: [caminho_do_diretório]
+- Sigla do curso: [SIGLA]
+- Módulo: [N] de [TOTAL]
+- Título: [Título do módulo]
+- Páginas (PDF): [X–Y] (leia com pages: "[X-Y]")
+- Output: [caminho_do_diretório]/revisao/modulo_0[N].md
+
+## FASE 1a — AUDITORIA DE QUALIDADE
+
+Leia o conteúdo do módulo no arquivo original.
+Para PDF: use Read com pages: "[X-Y]".
+Para DOCX: extraia a seção correspondente do XML.
 
 Avalie e corrija:
 
 | Critério | Ação |
 |---|---|
-| **Redundâncias** | Conteúdo repetido dentro do módulo ou igual a outro módulo → consolidar em uma única versão mais completa, remover duplicata |
-| **Relevância** | Conteúdo não relacionado à atuação profissional do curso → remover ou mover para seção de contexto |
-| **Profundidade insuficiente** | Conceito mencionado mas não explicado com aplicação prática → desenvolver com exemplo concreto |
-| **Precisão técnica** | Informação imprecisa, desatualizada ou incorreta → corrigir com informação atual e verificável |
-| **Utilidade profissional** | "O aluno consegue aplicar isso no trabalho?" → se não, reescrever com foco prático |
+| Redundâncias | Conteúdo repetido → consolidar, remover duplicata |
+| Relevância | Conteúdo fora da atuação profissional → remover ou mover para contexto |
+| Profundidade insuficiente | Conceito sem aplicação prática → desenvolver com exemplo concreto |
+| Precisão técnica | Informação imprecisa ou desatualizada → corrigir |
+| Utilidade profissional | "O aluno consegue aplicar isso no trabalho?" → se não, reescrever com foco prático |
 
-Salve o módulo auditado em `revisao/modulo_0N.md` (onde N é o número do módulo com zero à esquerda).
+## FASE 1b — ENRIQUECIMENTO DE CONTEÚDO
 
-Atualize PROGRESS.md marcando o módulo como auditado: `- [x] Módulo N — auditado`
-
-### Passo 3: Confirmar com usuário
-Após cada módulo auditado, informe brevemente o que foi alterado e pergunte se deseja continuar para o próximo módulo ou revisar algo. Isso permite interrupção controlada entre módulos.
-
----
-
-## 5. FASE 1b — ENRIQUECIMENTO DE CONTEÚDO
-
-**Propósito:** Adicionar elementos que tornam o aprendizado ativo e conectado à realidade profissional.
-
-Execute após a Fase 1a para cada módulo. Leia `revisao/modulo_0N.md` e adicione os elementos abaixo.
-
-### Rubrica Adaptativa
-
-**Antes de aplicar qualquer elemento**, analise o tipo de conteúdo do módulo:
-- É teórico (conceitos, história, fundamentos)?
-- É técnico-procedimental (passos, técnicas, manipulação de equipamentos)?
-- É relacional (comunicação, ética, trabalho em equipe)?
+Analise o tipo de conteúdo do módulo antes de aplicar os elementos:
+- Teórico (conceitos, história, fundamentos)?
+- Técnico-procedimental (passos, técnicas, equipamentos)?
+- Relacional (comunicação, ética, trabalho em equipe)?
 - Envolve cálculos ou medidas?
 
-Com base na análise, escolha os tipos mais adequados de cada elemento:
+### Exemplos Práticos Reais (mínimo 2–3)
+- Retratar cenas reais do ambiente de trabalho
+- Específicos, não genéricos ("Dona Maria, costureira há 15 anos em Caruaru, utiliza...")
+- Contextualizados na realidade brasileira
+- Distribuídos ao longo do módulo
 
-#### Exemplos Práticos Reais (mínimo 2–3 por módulo)
-- Devem retratar cenas reais do ambiente de trabalho do curso
-- Devem ser específicos, não genéricos ("Dona Maria, costureira há 15 anos em Caruaru, utiliza...")
-- Contextualizados na realidade brasileira quando relevante
-- Distribuídos ao longo do módulo, não todos no final
-
-#### Exercícios (mínimo 3 por módulo — escolher os tipos mais adequados)
+### Exercícios (mínimo 3 — escolher os tipos mais adequados ao conteúdo)
 Tipos disponíveis:
-- **Verificação de compreensão**: questão aberta sobre conceito do módulo
-- **Reflexão aplicada**: situação hipotética que o aluno resolve
-- **Estudo de caso**: narrativa realista com múltiplas questões
-- **Atividade em grupo**: discussão colaborativa ou elaboração conjunta
-- **Exercício prático**: tarefa manual ou procedimento (ideal para cursos técnicos)
-- **Cálculo ou planejamento**: envolvendo medidas, quantidades, custos (para cursos que usam matemática)
+- Verificação de compreensão: questão aberta sobre conceito do módulo
+- Reflexão aplicada: situação hipotética que o aluno resolve
+- Estudo de caso: narrativa realista com múltiplas questões
+- Atividade em grupo: discussão colaborativa
+- Exercício prático: tarefa manual ou procedimento
+- Cálculo ou planejamento: medidas, quantidades, custos
 
-Escolha os 3–4 tipos mais pertinentes ao conteúdo do módulo. Não force tipos inadequados.
+Escolha os 3–4 tipos mais pertinentes. Não force tipos inadequados.
 
-#### Atividades Práticas para Próxima Aula (1–2 por módulo)
-- Tarefa executada fora da sala de aula, relatada na aula seguinte
-- Exemplos adaptados ao curso:
-  - Técnico-manual: "Pratique a técnica X em casa com material acessível e traga o resultado"
-  - Observação: "Observe um profissional da área em seu bairro e registre..."
-  - Pesquisa aplicada: "Pesquise preços de materiais/equipamentos em três fornecedores locais"
-  - Conversa: "Entreviste alguém que trabalhe na área e traga 3 aprendizados"
+### Atividades Práticas para Próxima Aula (1–2)
+- Tarefa executada fora da sala, relatada na aula seguinte
+- Adaptar ao curso: prática manual, observação, pesquisa de preços, entrevista com profissional
 
-#### Marcadores de Imagem
-Insira marcadores onde uma ilustração agregaria valor. Use o critério:
-- Processos com passos sequenciais → `INFO` (infográfico)
-- Comparações (certo vs. errado, antes vs. depois) → `INFO`
-- Equipamentos, materiais, ferramentas → `FOTO`
-- Ambiente de trabalho real → `FOTO`
-- Anatomia, medidas, proporções → `INFO`
+### Marcadores de Imagem
+Insira onde uma ilustração agregaria valor:
+- Processos sequenciais → INFO (infográfico)
+- Comparações (certo vs. errado) → INFO
+- Equipamentos, materiais, ferramentas → FOTO
+- Ambiente de trabalho real → FOTO
+- Anatomia, medidas, proporções → INFO
 
-Formato obrigatório do marcador (em linha própria, entre parênteses retos):
+Formato obrigatório (em linha própria):
 ```
-[IMAGEM: COS_M01_01 | FOTO | descrição detalhada da cena para gerar a imagem | nome_arquivo.png]
+[IMAGEM: [SIGLA]_M0[N]_01 | FOTO | descrição detalhada | nome_arquivo.png]
 ```
 
-Após inserir marcadores de infográfico que precisem identificar elementos numerados, adicione no texto logo abaixo do marcador os títulos como seção de apoio:
+Para infográficos com elementos numerados, adicione logo abaixo:
 ```
 **Legenda da imagem:**
 1. [Título do elemento 1]
 2. [Título do elemento 2]
-...
 ```
-Somente se a imagem precisar identificar elementos. Se o visual for autoexplicativo, não adicionar legendas.
 
-Salve o módulo enriquecido (sobrescreva `revisao/modulo_0N.md`).
-Atualize PROGRESS.md: `- [x] Módulo N — enriquecido`
+## OUTPUT
 
-### Arquivos adicionais a criar em `revisao/`:
+Salve o módulo auditado e enriquecido em:
+[caminho_do_diretório]/revisao/modulo_0[N].md
+
+Crie a pasta `revisao/` se não existir.
+
+Ao terminar, retorne um resumo com:
+- Quantas redundâncias/imprecisões foram corrigidas
+- Quantos exemplos práticos foram adicionados
+- Quantos exercícios foram adicionados
+- Quantos marcadores de imagem foram inseridos
+```
+
+### Passo 5: Aguardar e consolidar
+
+Após todos os agentes concluírem:
+1. Leia cada `revisao/modulo_0N.md` gerado e confirme que existe
+2. Atualize PROGRESS.md marcando todos os módulos como `[x]` auditados e enriquecidos
+3. Exiba um resumo consolidado:
+```
+Fase 1 concluída — [N] módulos processados em paralelo.
+
+Resumo por módulo:
+  Módulo 1 — [Título]: X exemplos, Y exercícios, Z imagens
+  Módulo 2 — [Título]: X exemplos, Y exercícios, Z imagens
+  ...
+
+Próximo passo: Fase 2 — Catálogo de Imagens. Deseja continuar?
+```
+
+### Arquivos adicionais (criar após todos os agentes concluírem)
+
+Crie em `revisao/`:
 - `capa.md`: título do curso, subtítulo, público-alvo, carga horária
 - `indice.md`: lista de todos os módulos com títulos
 - `glossario.md`: termos técnicos identificados ao longo da apostila
@@ -152,7 +202,7 @@ Atualize PROGRESS.md: `- [x] Módulo N — enriquecido`
 
 ---
 
-## 6. FASE 2 — CATÁLOGO DE IMAGENS + EXCEL
+## 5. FASE 2 — CATÁLOGO DE IMAGENS + EXCEL
 
 **Propósito:** Compilar todos os marcadores de imagem e gerar os instrumentos de trabalho para criação e rastreamento.
 
@@ -210,7 +260,7 @@ Atualize PROGRESS.md com o número de imagens identificadas.
 
 ---
 
-## 7. FASE 3 — GERAÇÃO DE IMAGENS
+## 6. FASE 3 — GERAÇÃO DE IMAGENS
 
 **Propósito:** Gerar automaticamente todas as imagens via OpenAI API.
 
@@ -244,7 +294,7 @@ Atualize PROGRESS.md com status de configuração da API.
 
 ---
 
-## 8. FASE 4 — PACOTE DE HANDOFF PARA CLAUDE DESIGN
+## 7. FASE 4 — PACOTE DE HANDOFF PARA CLAUDE DESIGN
 
 **Propósito:** Preparar tudo para a diagramação no Claude Design.
 
@@ -305,7 +355,7 @@ Abra `D:\Documents\Projetos\Apostilas\STATUS_GERAL.md` e atualize a linha da apo
 
 ---
 
-## 9. FORMATO DO PROGRESS.MD
+## 8. FORMATO DO PROGRESS.MD
 
 Crie e mantenha este arquivo no diretório da apostila:
 
@@ -319,14 +369,9 @@ Crie e mantenha este arquivo no diretório da apostila:
 ## Módulos identificados
 [Lista com título de cada módulo]
 
-## Fase 1a: Auditoria de Qualidade
+## Fase 1: Auditoria + Enriquecimento (paralelo)
 - [ ] Módulo 1 — [Título]
 - [ ] Módulo 2 — [Título]
-...
-
-## Fase 1b: Enriquecimento
-- [ ] Módulo 1
-- [ ] Módulo 2
 ...
 
 ## Fase 2: Catálogo de Imagens
@@ -350,21 +395,22 @@ Crie e mantenha este arquivo no diretório da apostila:
 
 ---
 
-## 10. COMUNICAÇÃO COM O USUÁRIO
+## 9. COMUNICAÇÃO COM O USUÁRIO
 
-- **Linguagem**: português, tom amigável e direto — sem jargão técnico desnecessário
-- **Progresso**: antes de cada ação, informe o que será feito em uma frase
-- **Confirmações**: após processar cada módulo, mostre um resumo do que foi alterado/adicionado e pergunte se deseja continuar
-- **Erros**: se algo falhar (script Node.js, leitura de arquivo), descreva o problema em linguagem simples e ofereça alternativa manual
+- **Linguagem**: português, tom amigável e direto
+- **Antes de spawnar agentes**: sempre mostre a lista de módulos e aguarde confirmação
+- **Durante o processamento paralelo**: informe que os agentes estão rodando em paralelo e que o resultado aparecerá quando todos concluírem
+- **Após os agentes**: exiba o resumo consolidado de todos os módulos antes de perguntar sobre a Fase 2
+- **Erros**: se um agente falhar (módulo não encontrado, erro de leitura), descreva o problema e ofereça reprocessar só esse módulo
 - **Status sempre visível**: ao iniciar qualquer fase, mostre o PROGRESS.md resumido
 
 ---
 
-## 11. EXEMPLOS DE USO
+## 10. EXEMPLOS DE USO
 
 ```
 /apostila "D:\Documents\Projetos\Apostilas\Corte e Costura\Apostila Corte e Costura.pdf"
-→ Detecta que é nova apostila, inicia Fase 1a, processa primeiro módulo
+→ Mapeia módulos, exibe lista, aguarda confirmação, spawna N agentes em paralelo
 
 /apostila status
 → Exibe STATUS_GERAL.md com todas as apostilas e suas fases atuais
