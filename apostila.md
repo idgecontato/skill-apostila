@@ -268,8 +268,8 @@ Arquivo Markdown no diretório da apostila com todos os itens:
 - **Módulo:** 1 – [Título do módulo]
 - **Tipo:** FOTO
 - **Nome do arquivo:** nome_arquivo.png
-- **Contexto:** [Trecho do texto próximo ao marcador]
 - **Prompt ChatGPT:** [Prompt completo gerado]
+- **Contexto:** [Trecho do texto próximo ao marcador]
 ```
 
 ### Passo 4: Gerar `imagens_[SIGLA].xlsx`
