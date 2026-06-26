@@ -288,6 +288,14 @@ Se o script não for encontrado em nenhum local, informe o usuário:
 
 Se o Node.js não estiver disponível, crie `imagens_[SIGLA].csv` com os mesmos dados. Informe o usuário qual foi gerado.
 
+### Passo 5: Criar pasta de imagens
+
+Crie a pasta `Imagens [Nome do Curso]/` dentro do diretório da apostila:
+```
+[diretório da apostila]/Imagens [Nome do Curso]/
+```
+Se a pasta já existir, não faça nada. Informe o usuário onde as imagens devem ser salvas.
+
 Atualize PROGRESS.md com o número de imagens identificadas.
 
 ### Handoff para próxima fase
