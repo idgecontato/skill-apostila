@@ -151,7 +151,7 @@ Insira onde uma ilustração agregaria valor:
 
 Formato obrigatório (em linha própria):
 ```
-[IMAGEM: [SIGLA]_M0[N]_01 | FOTO | descrição detalhada | nome_arquivo.png]
+[IMAGEM: [SIGLA]_M0[N]_01 | FOTO | descrição detalhada | nome_arquivo]
 ```
 
 Para infográficos com elementos numerados, adicione logo abaixo:
@@ -267,7 +267,7 @@ Arquivo Markdown no diretório da apostila com todos os itens:
 ## ID: COS_M01_01
 - **Módulo:** 1 – [Título do módulo]
 - **Tipo:** FOTO
-- **Nome do arquivo:** nome_arquivo.png
+- **Nome do arquivo:** nome_arquivo
 - **Prompt ChatGPT:** [Prompt completo gerado]
 - **Contexto:** [Trecho do texto próximo ao marcador]
 ```

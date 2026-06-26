@@ -57,7 +57,7 @@ for (const mdFile of mdFiles) {
     const id = match[1].trim();
     const tipo = match[2].trim().toUpperCase();
     const descricao = match[3].trim();
-    const nomeArquivo = match[4].trim();
+    const nomeArquivo = match[4].trim().replace(/\.(png|jpg|jpeg|webp)$/i, '');
 
     // Contexto: texto das 2 linhas antes do marcador
     const posicao = content.lastIndexOf('\n', match.index);
