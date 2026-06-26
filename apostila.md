@@ -215,6 +215,23 @@ Crie em `revisao/`:
 - `glossario.md`: termos técnicos identificados ao longo da apostila
 - `referencias.md`: referências bibliográficas (preservar as existentes, adicionar se relevante)
 
+### Handoff para próxima fase
+
+Após exibir a tabela consolidada, apresente obrigatoriamente o bloco abaixo (substitua o caminho real):
+
+---
+**Fase 1 concluída.** Todos os arquivos estão salvos em `revisao/`.
+
+Para continuar sem perder contexto, faça o seguinte:
+
+**1.** Digite `/clear` para limpar a conversa
+**2.** Na nova conversa, cole o prompt abaixo:
+
+```
+/apostila fase2 "[caminho_do_diretório]"
+```
+---
+
 ---
 
 ## 5. FASE 2 — CATÁLOGO DE IMAGENS + EXCEL
@@ -273,6 +290,23 @@ Se o Node.js não estiver disponível, crie `imagens_[SIGLA].csv` com os mesmos 
 
 Atualize PROGRESS.md com o número de imagens identificadas.
 
+### Handoff para próxima fase
+
+Após confirmar que o catálogo e a planilha foram gerados, apresente obrigatoriamente o bloco abaixo:
+
+---
+**Fase 2 concluída.** Catálogo com [N] imagens gerado em `imagens_[SIGLA].xlsx`.
+
+Para continuar sem perder contexto, faça o seguinte:
+
+**1.** Digite `/clear` para limpar a conversa
+**2.** Na nova conversa, cole o prompt abaixo:
+
+```
+/apostila fase3 "[caminho_do_diretório]"
+```
+---
+
 ---
 
 ## 6. FASE 3 — GERAÇÃO DE IMAGENS
@@ -306,6 +340,23 @@ Para gerar imagens automaticamente, configure sua chave da OpenAI:
 ```
 
 Atualize PROGRESS.md com status de configuração da API.
+
+### Handoff para próxima fase
+
+Após confirmar que as imagens foram geradas (ou instruir o processo manual), apresente obrigatoriamente o bloco abaixo:
+
+---
+**Fase 3 concluída.** Imagens salvas em `Imagens [Nome da Apostila]/`.
+
+Para continuar sem perder contexto, faça o seguinte:
+
+**1.** Digite `/clear` para limpar a conversa
+**2.** Na nova conversa, cole o prompt abaixo:
+
+```
+/apostila handoff "[caminho_do_diretório]"
+```
+---
 
 ---
 
@@ -368,6 +419,23 @@ Cada marcador `[IMAGEM: ID | TIPO | descrição | nome_arquivo]` nos arquivos Ma
 ### Atualizar STATUS_GERAL.md
 Abra `D:\Documents\Projetos\Apostilas\STATUS_GERAL.md` e atualize a linha da apostila atual para: "Fase 5 — Aguardando design".
 
+### Mensagem final
+
+Após criar o pacote e atualizar STATUS_GERAL.md, apresente obrigatoriamente o bloco abaixo:
+
+---
+**Fase 4 concluída.** Pacote de handoff pronto em `handoff/`.
+
+A próxima etapa (Fase 5 — Diagramação) é realizada manualmente no Claude Design.
+
+**O que fazer agora:**
+1. Abra o Claude Design
+2. Carregue os arquivos da pasta `handoff/`
+3. Siga as instruções do `BRIEFING_DESIGN.md`
+
+Pode fechar esta conversa. `/clear`
+---
+
 ---
 
 ## 8. FORMATO DO PROGRESS.MD
@@ -418,6 +486,7 @@ Crie e mantenha este arquivo no diretório da apostila:
 - **Após os agentes**: exiba o resumo consolidado de todos os módulos antes de perguntar sobre a Fase 2
 - **Erros**: se um agente falhar (módulo não encontrado, erro de leitura), descreva o problema e ofereça reprocessar só esse módulo
 - **Status sempre visível**: ao iniciar qualquer fase, mostre o PROGRESS.md resumido
+- **Handoff obrigatório**: ao final de CADA fase, exiba o bloco de handoff com instrução de `/clear` e o prompt exato para a próxima fase — o usuário deve poder copiar e colar sem digitar nada
 
 ---
 
